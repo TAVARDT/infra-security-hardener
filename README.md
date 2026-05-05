@@ -15,9 +15,12 @@
 ### Overview
 This repository contains the official TAVARDT hardening script for Linux environments. In an era of increasing ransomware attacks and data breaches, a default server configuration is not enough. Our script automates the application of military-grade security protocols to ensure your digital infrastructure is resilient and secure.
 
+### 🚨 IMPORTANT: Safety Lock
+This script includes a "Safe Mode" to prevent accidental lockout. If no SSH Keys are detected in the authorized_keys file, the script will skip disabling password authentication. However, it will still disable direct root login. Ensure you have a non-root user with sudo privileges before running.
+
 ### Security Layers
 * Advanced Firewall: Deny all incoming traffic by default, allowing only essential services.
-* SSH Hardening: Disable root login and password authentication to prevent brute force.
+* SSH Hardening: Disable root login and password authentication (requires SSH Keys).
 * Intrusion Prevention: Automatic installation and configuration of Fail2Ban.
 * System Auditing: Identifying potential internal risks and unnecessary privileges.
 
@@ -39,9 +42,12 @@ Looking for elite cybersecurity, server recovery, or ransomware defense?
 ### Visão Geral
 Este repositório contém o script oficial de hardening da TAVARDT para ambientes Linux. Em uma era de crescentes ataques de ransomware e vazamentos de dados, uma configuração de servidor padrão não é suficiente. Nosso script automatiza a aplicação de protocolos de segurança de nível militar para garantir que sua infraestrutura digital seja resiliente e segura.
 
+### 🚨 IMPORTANTE: Trava de Segurança
+Este script inclui um "Modo Seguro" para evitar bloqueios acidentais. Se nenhuma Chave SSH for detectada no arquivo authorized_keys, o script não desativará a autenticação por senha. No entanto, ele ainda desativará o login direto do root. Certifique-se de ter um usuário comum com privilégios de sudo antes de executar.
+
 ### Camadas de Segurança
 * Firewall Avançado: Bloqueia todo o tráfego de entrada por padrão, permitindo apenas serviços essenciais.
-* Hardening de SSH: Desativa o login como root e a autenticação por senha para evitar força bruta.
+* Hardening de SSH: Desativa o login como root e a autenticação por senha (requer Chaves SSH).
 * Prevenção de Intrusão: Instalação e configuração automática do Fail2Ban.
 * Auditoria do Sistema: Identificação de riscos internos potenciais e privilégios desnecessários.
 

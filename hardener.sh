@@ -8,6 +8,22 @@ set -e
 
 echo "🔍 [TAVARDT CYBER] Starting Infrastructure Hardening Protocol..."
 
+# 0. Safety Check: Root and SSH Keys
+if [ "$EUID" -ne 0 ]; then 
+  echo "🚨 [ERROR] Please run as root (use sudo)."
+  exit 1
+fi
+
+AUTH_KEYS_FILE="$HOME/.ssh/authorized_keys"
+if [ ! -f "$AUTH_KEYS_FILE" ] || [ ! -s "$AUTH_KEYS_FILE" ]; then
+  echo "⚠️  [WARNING] No SSH Keys detected in $AUTH_KEYS_FILE."
+  echo "🚨 [SAFETY LOCK] Password authentication will NOT be disabled to prevent lockout."
+  SKIP_PASSWORD_HARDENING=true
+else
+  echo "✅ SSH Keys detected. Proceeding with high security mode."
+  SKIP_PASSWORD_HARDENING=false
+fi
+
 # 1. Update System
 echo "📦 Updating OS packages..."
 sudo apt-get update && sudo apt-get upgrade -y
@@ -24,8 +40,16 @@ echo "y" | sudo ufw enable
 
 # 3. SSH Hardening
 echo "🔐 Hardening SSH Configuration..."
+# Disable direct root login (Best practice: login as user and use sudo)
 sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
-sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+
+if [ "$SKIP_PASSWORD_HARDENING" = false ]; then
+  echo "🔒 Disabling password authentication (SSH Keys only)..."
+  sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+  sudo sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+fi
+
 sudo systemctl restart ssh
 
 # 4. Fail2Ban Installation
